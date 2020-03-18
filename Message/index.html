@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1696207_gyl5ev26l75.css">
+    <title>Message消息提示</title>
+    <style>
+        .container{
+            max-width: 800px;
+            margin:50px auto;
+            box-shadow: 0 0 3px 0 rgba(0,0,0,.3);
+            padding:30px;
+        }
+        .button {
+            padding:10px 16px;
+            margin-right:10px;
+            font-size:14px;
+            font-weight: 500;
+            background-color: #fff;
+            border:1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            color:#303030;
+        }
+        .button:hover,.button.active{
+            border-color: #409eff;
+            color:#409eff;
+            cursor: pointer;
+        }
+        .message {
+            position:fixed;
+            top:20px;
+            left:50%;
+            transform: translate(-50%,-50px);
+            display: flex;
+            align-items: center;
+            padding:10px 16px;
+            width: 300px;
+            font-size:14px;
+            border-radius:3px;
+            opacity:0;
+            transition: all .5s;
+        }
+        .message.show{
+            transform: translate(-50%,20px);
+            opacity: 1;
+        }
+        .message .iconfont{
+            margin-right:7px;
+        }
+        .message.info {
+            color:#95b2ec;
+            background-color:#e2eafa;
+        }
+        .message.success {
+            color:#4eb834;
+            background-color:#ebfaeb;
+        }
+        .message.warning {
+            color:#e6a81e;
+            background-color:#f8ebcc;
+        }
+        .message.danger {
+            color:#ec3a3a;
+            background-color:#fbd9da;   
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Message消息提示</h2>
+        <div class="btn-group">
+            <button id="btn-info" class="button">消息</button>
+            <button id="btn-success" class="button">成功</button>
+            <button id="btn-warning" class="button">警告</button>
+            <button id="btn-danger" class="button">错误</button>
+        </div>
+    </div>
+</body>
+<script>
+    class Message{
+        constructor({type='success',text='ok',obj={}}){
+            this.type=type
+            this.text = text
+            this.$button = obj
+            this.act()
+            this.render()
+            this.bind()
+        }
+        act(){
+            let $$bnts = document.querySelectorAll('.button')
+            $$bnts.forEach($bn=>$bn.classList.remove('active'))
+            this.$button.classList.add('active')
+        }
+        render(){
+            let $div = document.createElement('div')
+            this.$message = $div
+            $div.classList.add('message')
+            $div.classList.add(this.type)
+            let $icon = document.createElement('span')
+            $icon.classList.add('iconfont')
+            $icon.classList.add('icon-'+this.type)
+            $div.appendChild($icon)
+            let $text = document.createTextNode(this.text)
+            $div.appendChild($text)
+            document.body.appendChild($div)
+        }
+        bind(){
+            setTimeout(()=>this.$message.classList.add('show'),100)
+            setTimeout(()=>this.destory(),2000)
+        }
+        destory(){
+            this.$message.classList.remove('show')
+            setTimeout(()=>this.$message.parentNode.removeChild(this.$message),1000)
+        }
+    }
+    document.querySelector('#btn-info').onclick = function(){
+        new Message({type:'info',text:'恭喜你，这是一条消息出现',obj:this})
+    }
+    document.querySelector('#btn-success').onclick = function(){
+        new Message({type:'success',text:'恭喜你，这是一条成功的信息',obj:this})
+    }
+    document.querySelector('#btn-warning').onclick = function(){
+        new Message({type:'warning',text:'这是一条警告的信息',obj:this})
+    }
+    document.querySelector('#btn-danger').onclick = function(){
+        new Message({type:'danger',text:'这是一条错误的信息',obj:this})
+    }
+</script>
+</html>
